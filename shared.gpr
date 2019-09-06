@@ -1,0 +1,42 @@
+abstract project Shared is
+
+  Home := external ("HOME");
+
+  Output_Directory := Home & "/tmp";
+
+  Object_Dir  := Output_Directory & "/obj";
+  Library_Dir := Output_Directory & "/lib";
+  Exec_Dir    := Output_Directory & "/bin";
+
+  for Source_Files use ();
+
+  package Compiler is
+    Debug                     := "-g";
+    No_Optimisation           := "-O0";
+    Turn_On_All_Info_Warnings := "-gnatwa";
+    All_Validity_Check        := "-gnatVa";
+    Print_Listing             := "-gnatl";
+    Enable_Assert_Debug       := "-gnata"; --  pragmas Assertion_Policy and
+    --  Check_Policy
+
+    for Default_Switches ("Ada") use
+      (Debug
+       ,
+       No_Optimisation
+       ,
+       Enable_Assert_Debug
+       ,
+       Turn_On_All_Info_Warnings
+       ,
+       All_Validity_Check
+      -- ,
+      -- Print_Listing
+      );
+  end Compiler;
+
+  package Builder is
+    Number_Of_Processors := "-j4";
+    for Switches ("ada") use ( Number_Of_Processors );
+  end Builder;
+
+end Shared;

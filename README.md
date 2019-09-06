@@ -1,0 +1,1 @@
+# ada_projects_common

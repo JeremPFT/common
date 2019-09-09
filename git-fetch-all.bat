@@ -42,22 +42,8 @@ if not exist "%directory%" (
   echo.Checking %directory%
   echo.==========
   pushd %directory%
-  git status --porcelain
   FOR /F "tokens=*" %%g IN ('git status --porcelain') do (
       echo."%directory%\%%g" >> ..\todo_list.txt
-  rem   set "toDo=%%toDo%%, %directory%"
-
-  rem   rem SET VAR=%%g
-  rem   rem echo %directory%
-  rem   rem echo %VAR%
-  rem   rem if "%%g"=="" (
-  rem   rem    echo."up to date"
-  rem   rem    echo.
-  rem   rem    set "toDate=%%toDate%%, %%g"
-  rem   rem    echo."%toDate%"
-  rem   rem ) else (
-  rem   rem echo %%g
-  rem   rem )
   )
   popd
 )

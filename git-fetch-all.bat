@@ -2,6 +2,8 @@
 
 REM trying to print updated and todo projects at the end ... no luck yet, it's not bash :(
 
+echo. > ..\todo_list.txt
+
 set toDate=()
 set toDo=()
 
@@ -25,9 +27,9 @@ for %%d in %directories% do (
     )
 )
 
-rem echo.todo projects:
-rem for %%t in (%toDo%) do ( echo %%t )
-rem echo.DOOONE
+echo.
+echo.Results in todo_list.txt
+echo.(if no output, nothing to do)
 
 popd
 
@@ -43,7 +45,7 @@ if not exist "%directory%" (
   echo.==========
   pushd %directory%
   FOR /F "tokens=*" %%g IN ('git status --porcelain') do (
-      echo."%directory%\%%g" >> ..\todo_list.txt
+      echo.%directory%\%%g >> ..\todo_list.txt
   )
   popd
 )

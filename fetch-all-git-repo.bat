@@ -1,11 +1,8 @@
 @echo off
 
-REM trying to print updated and todo projects at the end ... no luck yet, it's not bash :(
+set OUTPUT=%~dp0todo_list.txt
 
-echo. > ..\todo_list.txt
-
-set toDate=()
-set toDo=()
+echo. > %OUTPUT%
 
 set directories=(org.opentoken-6.0b ^
     code_generator ^
@@ -13,25 +10,21 @@ set directories=(org.opentoken-6.0b ^
     code_generator_input ^
     code_generator_model ^
     code_generator_output ^
-    utils_assertions ^
-    utils_files_services ^
-    utils_strings_services ^
-    utils_templates ^
+    utils ^
     )
 
 pushd ..
 
 for %%d in %directories% do (
     if "%%d" NEQ "" (
+        set flag=0
         call :gitStatus %%d
     )
 )
 
-echo.
-echo.Results in todo_list.txt
-echo.(if no output, nothing to do)
-
 popd
+
+type %OUTPUT%
 
 REM ===== gitStatus ====
 :gitStatus
@@ -40,13 +33,25 @@ if "%directory%"=="" goto :EOF
 if not exist "%directory%" (
    echo directory not found: "%directory%"
 ) else (
-  echo.==========
-  echo.Checking %directory%
-  echo.==========
+REM  echo.==========
+  echo.Checking %directory%...
+REM  echo.==========
   pushd %directory%
+
+  echo repository %directory%: >> %OUTPUT%
+
   FOR /F "tokens=*" %%g IN ('git status --porcelain') do (
-      echo.%directory%\%%g >> ..\todo_list.txt
+      echo. > flag.txt
+      echo.  %%g >> %OUTPUT%
   )
+
+  if exist flag.txt (
+    del flag.txt
+  ) else (
+    echo.  UP TO DATE >> %OUTPUT%
+  )
+
+  echo. >> %OUTPUT%
   popd
 )
 goto :EOF

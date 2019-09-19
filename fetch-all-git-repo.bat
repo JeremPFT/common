@@ -4,18 +4,25 @@ set OUTPUT=%~dp0todo_list.txt
 
 echo. > %OUTPUT%
 
-set directories=(org.opentoken-6.0b ^
-    code_generator ^
-    common ^
-    code_generator_input ^
-    code_generator_model ^
-    code_generator_output ^
-    utils ^
-    )
+set myDirs=code_generator ^
+           code_generator_input ^
+           code_generator_model ^
+           code_generator_output ^
+           common ^
+           utils
+
+set otherDirs=org.opentoken-6.0b ^
+              org.stephe_leake.aunit_ext-3.3 ^
+              org.stephe_leake.makerules-3.3 ^
+              org.stephe_leake.sal-3.3 ^
+              org.wisitoken-1.3.0
+
+
+set directories=%myDirs% %otherDirs%
 
 pushd ..
 
-for %%d in %directories% do (
+for %%d in (%directories%) do (
     if "%%d" NEQ "" (
         set flag=0
         call :gitStatus %%d

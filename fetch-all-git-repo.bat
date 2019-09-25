@@ -1,8 +1,10 @@
 @echo off
 
-set OUTPUT=%~dp0todo_list.txt
+set OUTPUT=%~dp0ltodo_list.txt
+set MODIFIED_REPO=%~dp0modified_repo.txt
 
 echo. > %OUTPUT%
+echo. > %MODIFIED_REPO%
 
 set myDirs=code_generator ^
            code_generator_input ^
@@ -16,7 +18,6 @@ set otherDirs=org.opentoken-6.0b ^
               org.stephe_leake.makerules-3.3 ^
               org.stephe_leake.sal-3.3 ^
               org.wisitoken-1.3.0
-
 
 set directories=%myDirs% %otherDirs%
 
@@ -32,6 +33,10 @@ for %%d in (%directories%) do (
 popd
 
 type %OUTPUT%
+
+echo ====================
+echo modified repositories:
+type %MODIFIED_REPO%
 
 REM ===== gitStatus ====
 :gitStatus
@@ -54,11 +59,13 @@ REM  echo.==========
 
   if exist flag.txt (
     del flag.txt
+    echo %directory% >> %MODIFIED_REPO%
   ) else (
     echo.  UP TO DATE >> %OUTPUT%
   )
 
   echo. >> %OUTPUT%
+
   popd
 )
 goto :EOF

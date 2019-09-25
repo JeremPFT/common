@@ -1,0 +1,14 @@
+abstract project AUnit_Src is
+
+  AUnit_Path := "../aunit/include/aunit";
+
+  Src_Dirs := ();
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/framework");
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/containers");
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/reporters");
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/framework");
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/framework/zfpexception");
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/framework/calendar");
+  Src_Dirs := Src_Dirs & (AUnit_Path & "/framework/nativememory");
+
+end AUnit_Src;

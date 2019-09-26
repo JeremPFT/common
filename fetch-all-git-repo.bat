@@ -38,6 +38,9 @@ echo ====================
 echo modified repositories:
 type %MODIFIED_REPO%
 
+del /q %OUTPUT%
+del /q %MODIFIED_REPO%
+
 REM ===== gitStatus ====
 :gitStatus
 set directory=%~1

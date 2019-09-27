@@ -1,7 +1,7 @@
 @echo off
 
-set OUTPUT=%~dp0ltodo_list.txt
-set MODIFIED_REPO=%~dp0modified_repo.txt
+set OUTPUT=%~dp0..\todo_list.txt
+set MODIFIED_REPO=%~dp0..\modified_repo.txt
 
 echo. > %OUTPUT%
 echo. > %MODIFIED_REPO%

@@ -7,6 +7,7 @@ echo. > %OUTPUT%
 echo. > %MODIFIED_REPO%
 
 set myDirs=code_generator ^
+           code_generator_input_python ^
            code_generator_input ^
            code_generator_model ^
            code_generator_output ^

@@ -56,6 +56,7 @@ REM  echo.==========
 
   echo repository %directory%: >> %OUTPUT%
 
+  git fetch
   FOR /F "tokens=*" %%g IN ('git status --porcelain') do (
       echo. > flag.txt
       echo.  %%g >> %OUTPUT%

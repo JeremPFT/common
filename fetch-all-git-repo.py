@@ -48,6 +48,7 @@ erase = [
     '  (use "git checkout -- <file>..." to discard changes in working directory)\n\n',
     '  (use "git add <file>..." to include in what will be committed)\n\n',
     'no changes added to commit (use "git add" and/or "git commit -a")\n',
+    "Fetching origin\n",
 ]
 
 for repo in repositories:
@@ -60,17 +61,6 @@ for repo in repositories:
     for substring in erase:
         output = output.replace(substring, "")
 
-#     output = output.replace("On branch master\n", "")
-#     output = output.replace("Your branch is up-to-date with 'origin/master'.\n", "")
-#     output = output.replace("nothing to commit, working directory clean\n", "")
-#     output = output.replace('no changes added to commit (use "git add" and/or "git commit -a")', '')
-#     output = output.replace('(use "git add <file>..." to include in what will be committed)\n', '')
-#     output = output.replace("Untracked files:\n", "Untracked files:")
-#     output = output.replace("""  (use "git add <file>..." to update what will be committed)
-#   (use "git checkout -- <file>..." to discard changes in working directory)
-
-# """, "")
-#     output = output.replace('\n\n\n', '')
     if output == "":
         print("up to date", flush=True)
     else:

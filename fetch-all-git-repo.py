@@ -6,9 +6,6 @@ import subprocess
 dir_path = os.path.dirname(os.path.realpath(__file__))
 root_path = os.path.dirname(dir_path)
 
-print(dir_path)
-print(root_path)
-
 myRepositories = [
     "code_generator",
     "code_generator_input_python",
@@ -29,48 +26,35 @@ otherRepositories = [
 
 repositories = myRepositories + otherRepositories
 
-print(repositories)
-
 os.chdir(root_path)
 
-# subprocess.run(["ls", "-l"])
-
-
-reposToDo = []
-
-erase1 = []
-erase = [
-    "On branch master\n",
-    "Your branch is up-to-date with 'origin/master'.\n",
-    "nothing to commit, working directory clean\n",
-    '  (use "git pull" to update your local branch)',
-    '  (use "git add <file>..." to update what will be committed)\n',
-    '  (use "git checkout -- <file>..." to discard changes in working directory)\n\n',
-    '  (use "git add <file>..." to include in what will be committed)\n\n',
-    'no changes added to commit (use "git add" and/or "git commit -a")\n',
-    "Fetching origin\n",
-]
+modified_repo_list = []
 
 for repo in repositories:
     print("-" * 30 + "\nchecking " + repo + ":", flush=True)
 
     os.chdir(repo)
-    subprocess.run(args="git remote update")
-    output = subprocess.check_output(args="git status", universal_newlines=True)
 
-    for substring in erase:
-        output = output.replace(substring, "")
+    subprocess.run(args = "git remote update",
+                   capture_output = True)
 
-    if output == "":
-        print("up to date", flush=True)
+    output = subprocess.check_output(args ="git status",
+                                     universal_newlines =True)
+
+    if "is behind" in output or "modified:" in output:
+        print(output, flush = True)
+        modified_repo_list.append(repo)
     else:
-        print(output, flush=True)
-        reposToDo.append(repo)
+        print("up to date", flush = True)
+
     os.chdir(root_path)
 
 print("=" * 30 + "\nmodified repositories:")
-if len(reposToDo) == 0:
+
+if len(modified_repo_list) == 0:
     print("none")
-for repo in reposToDo:
+
+for repo in modified_repo_list:
     print(repo)
+
 print("=" * 30)

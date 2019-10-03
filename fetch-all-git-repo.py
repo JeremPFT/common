@@ -54,6 +54,7 @@ for repo in repositories:
     print("-" * 30 + "\nchecking " + repo + ":", flush=True)
 
     os.chdir(repo)
+    subprocess.run(args="git remote update")
     output = subprocess.check_output(args="git status", universal_newlines=True)
 
     for substring in erase:

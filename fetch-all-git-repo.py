@@ -35,8 +35,9 @@ for repo in repositories:
 
     os.chdir(repo)
 
-    subprocess.run(args = "git remote update",
-                   capture_output = True)
+    subprocess.call(args = "git remote update",
+                    stdout = subprocess.DEVNULL,
+                    stderr = subprocess.DEVNULL)
 
     output = subprocess.check_output(args ="git status",
                                      universal_newlines =True)

@@ -8,7 +8,7 @@ root_path = os.path.dirname(dir_path)
 
 myRepositories = [
     "code_generator",
-    "code_generator_input_python",
+    "code_generator_py",
     "code_generator_input",
     "code_generator_model",
     "code_generator_output",

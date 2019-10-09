@@ -30,7 +30,7 @@ os.chdir(root_path)
 
 modified_repo_list = []
 
-for repo in repositories:
+def check_repo(repo):
     print("-" * 30 + "\nchecking " + repo + ":", flush=True)
 
     os.chdir(repo)
@@ -50,12 +50,24 @@ for repo in repositories:
 
     os.chdir(root_path)
 
-print("=" * 30 + "\nmodified repositories:")
+def print_resume():
+    print("=" * 30 + "\nmodified repositories:")
 
-if len(modified_repo_list) == 0:
-    print("none")
+    if len(modified_repo_list) == 0:
+        print("none")
 
-for repo in modified_repo_list:
-    print(repo)
+    for repo in modified_repo_list:
+        print(repo)
 
-print("=" * 30)
+    print("=" * 30)
+
+for repo in repositories:
+    check_repo(repo)
+
+
+path_to_home = os.path.normpath(os.environ["HOME"])
+path_to_emacs_conf = os.path.normpath(os.path.join(os.path.dirname(path_to_home), "emacs_ingenico", ".emacs.d"))
+
+check_repo(path_to_emacs_conf)
+
+print_resume()

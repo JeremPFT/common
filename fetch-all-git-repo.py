@@ -32,6 +32,10 @@ modified_repo_list = []
 
 def check_repo(repo):
     print("-" * 30 + "\nchecking " + repo + ":", flush=True)
+    if not os.path.exists(repo):
+        print("!! WARNING !! local directory missing")
+        print("-" * 30, flush=True)
+        return
 
     os.chdir(repo)
 
@@ -50,8 +54,10 @@ def check_repo(repo):
 
     os.chdir(root_path)
 
+    print("-" * 30, flush=True)
+
 def print_resume():
-    print("=" * 30 + "\nmodified repositories:")
+    print("\n" + "=" * 30 + "\nmodified repositories:")
 
     if len(modified_repo_list) == 0:
         print("none")
@@ -61,13 +67,17 @@ def print_resume():
 
     print("=" * 30)
 
-for repo in repositories:
-    check_repo(repo)
 
 
 path_to_home = os.path.normpath(os.environ["HOME"])
-path_to_emacs_conf = os.path.normpath(os.path.join(os.path.dirname(path_to_home), "emacs_ingenico", ".emacs.d"))
+path_to_emacs_conf = os.path.normpath(os.path.join(os.path.dirname(path_to_home),
+                                                   "emacs_ingenico",
+                                                   ".emacs.d"))
 
-check_repo(path_to_emacs_conf)
 
-print_resume()
+if __name__ == '__main__':
+    print()
+    for repo in repositories:
+        check_repo(repo)
+    check_repo(path_to_emacs_conf)
+    print_resume()

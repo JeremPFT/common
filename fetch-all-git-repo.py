@@ -73,7 +73,9 @@ path_to_home = os.path.normpath(os.environ["HOME"])
 path_to_emacs_conf = os.path.normpath(os.path.join(os.path.dirname(path_to_home),
                                                    "emacs_ingenico",
                                                    ".emacs.d"))
-
+if not os.path.exists(path_to_emacs_conf):
+    path_to_emacs_conf = os.path.normpath(os.path.join(path_to_home,
+                                                       ".emacs.d"))
 
 if __name__ == '__main__':
     print()

@@ -1,5 +1,7 @@
 abstract project Shared is
 
+  for Create_Missing_Dirs use "True";
+
   Home := external ("HOME");
 
   Output_Directory := Home & "/tmp";

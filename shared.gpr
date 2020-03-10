@@ -2,43 +2,29 @@ abstract project Shared is
 
   for Create_Missing_Dirs use "True";
 
-  Home := external ("HOME");
-
-  Output_Directory := Home & "/tmp";
-
-  Object_Dir  := Output_Directory & "/obj";
-  Library_Dir := Output_Directory & "/lib";
-  Exec_Dir    := Output_Directory & "/bin";
-
   for Source_Files use ();
 
-  package Compiler is
-    Debug                     := "-g";
-    No_Optimisation           := "-O0";
-    Turn_On_All_Info_Warnings := "-gnatwa";
-    All_Validity_Check        := "-gnatVa";
-    Print_Listing             := "-gnatl";
-    Enable_Assert_Debug       := "-gnata"; --  pragmas Assertion_Policy and
-    --  Check_Policy
+  for Object_Dir  use external ("HOME") & "/tmp/obj";
+  for Library_Dir use external ("HOME") & "/tmp/lib";
+  for Exec_Dir    use external ("HOME") & "/tmp/bin";
 
-    for Default_Switches ("Ada") use
-      (Debug
-       ,
-       No_Optimisation
-       ,
-       Enable_Assert_Debug
-       ,
-       Turn_On_All_Info_Warnings
-       ,
-       All_Validity_Check
-      -- ,
-      -- Print_Listing
-      );
-  end Compiler;
+  for Runtime ("ada") use "default";
+
+  -- switches reference:
+  -- https://gcc.gnu.org/onlinedocs/gnat_ugn/Alphabetical-List-of-All-Switches.html
 
   package Builder is
-    Number_Of_Processors := "-j4";
-    for Switches ("ada") use ( Number_Of_Processors );
+    for Switches ("ada") use
+      ("-g", "-j0", "-k", "-gnat12", "-gnatE", "-gnato", "-gnatQ");
   end Builder;
+
+  package Compiler is
+    for Default_Switches ("ada") use
+      ("-g", "-O0", "-gnata", "-gnatwa", "-gnatVa");
+  end Compiler;
+
+  package Linker is
+    for Switches ("ada") use ("-g");
+  end Linker;
 
 end Shared;

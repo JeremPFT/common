@@ -15,7 +15,10 @@ abstract project Shared is
 
   package Builder is
     for Switches ("ada") use
-      ("-g", "-j0", "-k", "-gnat12", "-gnatE", "-gnato", "-gnatQ");
+      ("-g", "-j0", "-k", "-gnat12",
+       -- "-gnatE",
+       "-gnato",
+       "-gnatQ");
   end Builder;
 
   package Compiler is

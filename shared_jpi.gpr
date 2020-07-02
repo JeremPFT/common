@@ -10,20 +10,47 @@ abstract project Shared_Jpi is
 
   for Runtime ("ada") use "default";
 
+  type Build_Type is ("DEBUG", "PRODUCTION");
+  Build : Build_Type := external ("BUILD", "DEBUG");
+
   -- switches reference:
   -- https://gcc.gnu.org/onlinedocs/gnat_ugn/Alphabetical-List-of-All-Switches.html
 
   package Builder is
-    for Switches ("ada") use
-      ("-g", "-j0", "-k", "-gnat12",
-       -- "-gnatE",
-       "-gnato",
-       "-gnatQ");
+    case Build is
+      when "DEBUG" =>
+        for Switches ("ada") use
+          ("-g", "-j0", "-k", "-gnat12",
+           -- "-gnatE",
+           "-gnato",
+           "-gnatQ");
+      when "PRODUCTION" =>
+        for Switches ("ada") use
+          ("-g", "-j0", "-k", "-gnat12",
+           "-gnato",
+           "-gnatQ");
+    end case;
   end Builder;
 
   package Compiler is
-    for Default_Switches ("ada") use
-      ("-g", "-O0", "-gnata", "-gnatwa", "-gnatVa");
+    case Build is
+      when "DEBUG" =>
+        for Default_Switches ("ada") use
+          (
+           "-g",
+           "-O0",
+           "-gnata",  -- pre & post
+           "-gnatwa",
+           "-gnatVa"
+          );
+      when "PRODUCTION" =>
+        for Default_Switches ("ada") use
+          (
+           "-O2",
+           "-gnatwa",
+           "-gnatVa"
+          );
+    end case;
   end Compiler;
 
   package Linker is

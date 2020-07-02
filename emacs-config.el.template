@@ -1,0 +1,46 @@
+(let*
+            ((prj-name "ada_test_architectures")
+             (prj-main "ata-tests-run")
+             (build-type-debug "DEBUG")
+             (build-type-prod "PRODUCTION")
+             (build-type build-type-debug)
+             (home-dir
+              (file-name-as-directory
+               (getenv "HOME")))
+             (prj-subdir
+              (file-name-as-directory
+               (concat "workspace/" prj-name)))
+             (prj-dir
+              (concat home-dir prj-subdir))
+             (prj-src
+              (file-name-as-directory
+               (concat prj-subdir "src"))))
+
+          (load "compile")
+
+          (unless (file-exists-p (concat prj-dir "default.cgpr"))
+            (setq default-directory prj-dir)
+            (call-process "gprconfig" nil nil nil "--config=Ada" "--batch"))
+
+          (add-to-list 'compilation-search-path
+                       (concat prj-dir "src/"))
+
+          (dolist (src-subdir '("src/"))
+            (add-to-list 'compilation-search-path
+                         (concat prj-dir src-subdir "/")))
+
+          (ada-select-prj-file
+           (concat prj-dir prj-name ".gpr"))
+
+          (ada-prj-put 'make_cmd
+                       (concat "cd " prj-dir " && " "make dbg"))
+
+          (ada-prj-put 'run_cmd
+                       (concat "cd "
+                               prj-dir
+                               "bin "
+                               " && "
+                               "set BUILD=" build-type "&&"
+                               "${main}.exe"))
+
+          (ada-prj-put 'main prj-main))

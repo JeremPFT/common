@@ -1,0 +1,11 @@
+--  this file is defined to use C-c C-c on emacs to run the makefile
+
+procedure Emacs_Config is
+begin
+   null;
+end Emacs_Config;
+
+-- Local Variables:
+-- eval: (add-to-list 'load-path ".")
+-- eval: (load "emacs_config")
+-- End:

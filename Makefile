@@ -1,25 +1,67 @@
+# CUSTOM
+PROJECT=<<PROJECT_NAME>>
+EXE=<<EXEC_NAME>>
+## CUSTOM
+
 ifdef OS
 	EXT=.exe
 else
 	EXT=
 endif
 
-BUILD=gprbuild$(EXT)
-CLEAN=gprclean$(EXT)
+define checkExistence
+	test -f $(1) || { echo "file '$(1)' not found"; exit 1; }
+endef
+
+define buildRun
+	$(BUILD) -P$(PROJECT).gpr -XBUILD=$(1)
+	( BUILD=$(1) $(EXE) )
+endef
+
+#
+# build cmd config
+#
+
+BUILD_EXEC=gprbuild$(EXT)
+BUILD_ARGS=-j0 -k
+BUILD=$(BUILD_EXEC) $(BUILD_ARGS)
+# -j0 (use the maximum number of simultaneous compilation jobs)
+# -k (keep going after compilation errors)
+
+#
+# clean cmd config
+#
+
+CLEAN_EXEC=gprclean$(EXT)
+CLEAN_ARGS=
+CLEAN=$(CLEAN_EXEC) $(CLEAN_ARGS)
+
+#
+# targets
+#
 
 .PHONY : all compil_lib compil_tests clean run_tests
 
 all: run_tests
 
-compil_lib::
-	$(BUILD) -j4 -g -gnatef $(LIB_GPR)
+dbg:
+	$(call buildRun,DEBUG)
 
-compil_tests::
-	$(BUILD) -j4 -g -gnatef $(TEST_GPR)
+prod:
+	$(call buildRun,PRODUCTION)
 
-clean::
-	$(CLEAN) $(LIB_GPR)
-	$(CLEAN) $(TEST_GPR)
+autocheck::
+#	@$(call checkExistence, $(BUILD_EXEC))
+#	@$(call checkExistence, $(CLEAN_EXEC))
 
-run_tests: compil_tests
-	$(RUN)
+compil: autocheck
+	$(BUILD)
+
+run: autocheck
+	@$(call checkExistence,$(subst \,/,$(HOME))/tmp/bin/$(EXE))
+	cd $(subst \,/,$(HOME))/tmp/bin && ./$(EXE)
+
+
+clean: autocheck
+	$(CLEAN)
+	-@rm -r bin obj

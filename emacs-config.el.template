@@ -33,7 +33,11 @@
            (concat prj-dir prj-name ".gpr"))
 
           (ada-prj-put 'make_cmd
-                       (concat "cd " prj-dir " && " "make dbg"))
+                       (concat "cd " prj-dir
+                               " && gprbuild -P" prj-name ".gpr"
+                               " -XBUILD=DEBUG"))
+          ;; (ada-prj-put 'make_cmd
+          ;;              (concat "cd " prj-dir " && " "make dbg"))
 
           (ada-prj-put 'run_cmd
                        (concat "cd "

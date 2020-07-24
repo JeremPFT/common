@@ -2,18 +2,15 @@ abstract project Shared_Jpi is
 
   type Library_Type_Type is
     ("relocatable", "static", "static-pic");
-
   Library_Type : Library_Type_Type := external ("LIBRARY_TYPE", "static");
 
   type Build_Type is
     ("debug", "production", "coverage", "profiling");
+  Build_T : Build_Type := external ("BUILD_TYPE", "debug");
+
 
   type Build_Kind is ("static", "relocatable", "static-pic");
   Build : Build_Kind := external("GPR_BUILD", external("LIBRARY_TYPE", "static"));
-
-  type Dbg_Prd_Type is ("debug", "production");
-  Dbg_Prd : Dbg_Prd_Type := external ("DBG_PRD", "DEBUG");
-
 
   for Create_Missing_Dirs use "True";
 
@@ -29,39 +26,49 @@ abstract project Shared_Jpi is
   -- https://gcc.gnu.org/onlinedocs/gnat_ugn/Alphabetical-List-of-All-Switches.html
 
   package Compiler is
-    case Dbg_Prd is
-      when "DEBUG" =>
+    case Build_T is
+      when "debug" =>
         for Default_Switches ("ada") use
           (
-           "-g",
-           "-O0",
-           "-gnata",  -- pre & post
-           "-gnatwa",
-           "-gnatVa"
+           "-g" -- debug
+           ,
+           "-O0" -- optim
+           ,
+           "-gnata"  -- pre & post
+           ,
+           "-gnatwa" -- all warnings
+           ,
+           "-gnatVa"  -- validity checks
           );
-      when "PRODUCTION" =>
+      when "production" =>
         for Default_Switches ("ada") use
           (
-           "-O2",
-           "-gnatwa",
-           "-gnatVa"
+           "-O2"
           );
+      when "coverage" =>
+        null;
+      when "profiling" =>
+        null;
     end case;
   end Compiler;
 
   package Builder is
-    case Dbg_Prd is
-      when "DEBUG" =>
+    case Build_T is
+      when "debug" =>
         for Switches ("ada") use
           ("-g", "-j0", "-k", "-gnat12",
            -- "-gnatE",
            "-gnato",
            "-gnatQ");
-      when "PRODUCTION" =>
+      when "production" =>
         for Switches ("ada") use
           ("-g", "-j0", "-k", "-gnat12",
            "-gnato",
            "-gnatQ");
+      when "coverage" =>
+        null;
+      when "profiling" =>
+        null;
     end case;
   end Builder;
 

@@ -1,79 +1,78 @@
 abstract project Shared_Jpi is
 
-  type Library_Type_Type is
-    ("relocatable", "static", "static-pic");
-  Library_Type : Library_Type_Type := external ("LIBRARY_TYPE", "static");
+   type Library_Type_Type is
+     ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type := external ("LIBRARY_TYPE", "static");
 
-  type Build_Type is
-    ("debug", "production", "coverage", "profiling");
-  Build_T : Build_Type := external ("BUILD_TYPE", "debug");
+   type Build_Type is
+     ("debug", "production", "coverage", "profiling");
+   Build_T : Build_Type := external ("BUILD_TYPE", "debug");
 
+   type Build_Kind is ("static", "relocatable", "static-pic");
+   Build : Build_Kind := external("GPR_BUILD", external("LIBRARY_TYPE", "static"));
 
-  type Build_Kind is ("static", "relocatable", "static-pic");
-  Build : Build_Kind := external("GPR_BUILD", external("LIBRARY_TYPE", "static"));
+   for Create_Missing_Dirs use "True";
 
-  for Create_Missing_Dirs use "True";
+   for Source_Files use ();
 
-  for Source_Files use ();
+   for Object_Dir  use external ("HOME") & "/tmp/obj";
+   for Library_Dir use external ("HOME") & "/tmp/lib";
+   for Exec_Dir    use external ("HOME") & "/tmp/bin";
 
-  for Object_Dir  use external ("HOME") & "/tmp/obj";
-  for Library_Dir use external ("HOME") & "/tmp/lib";
-  for Exec_Dir    use external ("HOME") & "/tmp/bin";
+   for Runtime ("ada") use "default";
 
-  for Runtime ("ada") use "default";
+   -- switches reference:
+   -- https://gcc.gnu.org/onlinedocs/gnat_ugn/Alphabetical-List-of-All-Switches.html
 
-  -- switches reference:
-  -- https://gcc.gnu.org/onlinedocs/gnat_ugn/Alphabetical-List-of-All-Switches.html
-
-  package Compiler is
-    case Build_T is
+   package Compiler is
+      case Build_T is
       when "debug" =>
-        for Default_Switches ("ada") use
-          (
-           "-g" -- debug
-           ,
-           "-O0" -- optim
-           ,
-           "-gnata"  -- pre & post
-           ,
-           "-gnatwa" -- all warnings
-           ,
-           "-gnatVa"  -- validity checks
-          );
+         for Default_Switches ("ada") use
+           (
+            "-g" -- debug
+            ,
+            "-O0" -- optim
+            ,
+            "-gnata"  -- pre & post
+            ,
+            "-gnatwa" -- all warnings
+            ,
+            "-gnatVa"  -- validity checks
+           );
       when "production" =>
-        for Default_Switches ("ada") use
-          (
-           "-O2"
-          );
+         for Default_Switches ("ada") use
+           (
+            "-O2"
+           );
       when "coverage" =>
-        null;
+         null;
       when "profiling" =>
-        null;
-    end case;
-  end Compiler;
+         null;
+      end case;
+   end Compiler;
 
-  package Builder is
-    case Build_T is
+   package Builder is
+      case Build_T is
       when "debug" =>
-        for Switches ("ada") use
-          ("-g", "-j0", "-k", "-gnat12",
-           -- "-gnatE",
-           "-gnato",
-           "-gnatQ");
+         for Switches ("ada") use
+           ("-g", "-j0", "-k", "-gnat12",
+            -- "-gnatE",
+            "-gnato",
+            "-gnatQ");
       when "production" =>
-        for Switches ("ada") use
-          ("-g", "-j0", "-k", "-gnat12",
-           "-gnato",
-           "-gnatQ");
+         for Switches ("ada") use
+           ("-g", "-j0", "-k", "-gnat12",
+            "-gnato",
+            "-gnatQ");
       when "coverage" =>
-        null;
+         null;
       when "profiling" =>
-        null;
-    end case;
-  end Builder;
+         null;
+      end case;
+   end Builder;
 
-  package Linker is
-    for Switches ("ada") use ("-g");
-  end Linker;
+   package Linker is
+      for Switches ("ada") use ("-g");
+   end Linker;
 
 end Shared_Jpi;
